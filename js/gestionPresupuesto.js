@@ -1,5 +1,3 @@
-const date = new Date();
-
 var presupuesto = 0;
 var gastos = new Array();
 var idGasto = 0;
@@ -20,24 +18,35 @@ function mostrarPresupuesto() {
 
 function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     this.etiquetas = [];
+    this.descripcion = descripcion;
     if(valor < 0 || typeof valor != 'number'){
         this.valor = 0;
     }
     else{
         this.valor = valor;
     }
-    
+
+    if(fecha == ''|| typeof fecha !== 'string' || isNaN(Date.parse(fecha))){
+        this.fecha = new Date();
+    }
+    else{
+        this.fecha = Date.parse(fecha);  
+    }
 
 
-// esta sale como dd/mm/yyyy o mm/dd/yyyy dependiendo de la zona, la que quiero. fecha = date.toLocaleDateString() 
-
-
+    this.actualizarFecha = function(nuevaFecha){
+        if(nuevaFecha != ''&& typeof nuevaFecha === 'string' && !isNaN(Date.parse(nuevaFecha))){
+            this.fecha = Date.parse(nuevaFecha)
+        }
+    }
     this.mostrarGastoCompleto = function() {
         let stringEtiquetas ='';
+        let fechaBien;
+        
         etiquetas.forEach(element => {
             stringEtiquetas += `- ${element}\n`
         });
-        return`Gasto correspondiente a ${descripcion} con valor ${valor} €.\nFecha: ${fecha}\nEtiquetas:\n${stringEtiquetas}`
+        return`Gasto correspondiente a ${descripcion} con valor ${valor} €.\nFecha: ${new Date(this.fecha).toLocaleString()}\nEtiquetas:\n${stringEtiquetas}`
                 ;
     }
     this.actualizarDescripcion = function(nuevaDescripcion){
@@ -48,14 +57,6 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
             this.valor = nuevoValor;
         }
     }
-
-    
-    this.actualizarFecha = function(nuevaFecha){
-
-    }
-    
-
-    
     this.anyadirEtiquetas = function(...nuevasEtiquetas){
         nuevasEtiquetas.forEach(element =>{
             if(!this.etiquetas.includes(element)){
@@ -85,7 +86,7 @@ function anyadirGasto(gasto){
 }
 
 function borrarGasto(gastoABorrar){
-    if(!isNaN(gastoABorrar)&&gastoABorrar>=0){
+    if(!isNaN(gastoABorrar) && gastoABorrar >= 0){
         for (let i = 0; i < gastos.length; i++) {
             if (gastos[i].id == gastoABorrar) {
                 gastos.splice(i, 1);
