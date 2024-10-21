@@ -39,6 +39,9 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
             this.fecha = Date.parse(nuevaFecha)
         }
     }
+    this.mostrarGasto = function(){
+        return `Gasto correspondiente a ${this.descripcion} con valor ${this.valor} €`
+    }
     this.mostrarGastoCompleto = function() {
         let stringEtiquetas ='';
         let fechaBien;
