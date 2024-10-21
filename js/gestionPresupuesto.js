@@ -19,16 +19,16 @@ function mostrarPresupuesto() {
 }
 
 function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
-    this.etiquetas = new Array();
+    this.etiquetas = [];
     if(valor < 0 || typeof valor != 'number'){
         this.valor = 0;
     }
     else{
         this.valor = valor;
     }
-    this.etiquetas = this.anyadirEtiquetas(...newEtiquetas)
+    
 
-  date.
+
 // esta sale como dd/mm/yyyy o mm/dd/yyyy dependiendo de la zona, la que quiero. fecha = date.toLocaleDateString() 
 
 
@@ -53,7 +53,9 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     this.actualizarFecha = function(nuevaFecha){
 
     }
+    
 
+    
     this.anyadirEtiquetas = function(...nuevasEtiquetas){
         nuevasEtiquetas.forEach(element =>{
             if(!this.etiquetas.includes(element)){
@@ -63,12 +65,13 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     }
     this.borrarEtiquetas = function(...borrarEtiquetas){
         borrarEtiquetas.forEach(element => {
-            let index = etiquetas.indexOf(element);
+            let index = this.etiquetas.indexOf(element);
             if(index !== -1){
                 this.etiquetas.splice(index,1)
             }
         });
     }
+    this.anyadirEtiquetas(...etiquetas)
 }
 
 function listarGastos(){
@@ -82,7 +85,7 @@ function anyadirGasto(gasto){
 }
 
 function borrarGasto(gastoABorrar){
-    if(!isNaN(gastoABorrar)&&gastoABorrar>0){
+    if(!isNaN(gastoABorrar)&&gastoABorrar>=0){
         for (let i = 0; i < gastos.length; i++) {
             if (gastos[i].id == gastoABorrar) {
                 gastos.splice(i, 1);
@@ -93,11 +96,15 @@ function borrarGasto(gastoABorrar){
 }
 
 function calcularTotalGastos(){
-
+    let sumaGastos = 0;
+    gastos.forEach(element => {
+        sumaGastos += element.valor;
+    });
+    return sumaGastos;
 }
 
 function calcularBalance(){
-
+    return presupuesto - calcularTotalGastos();
 }
 
 
