@@ -1,4 +1,8 @@
+const date = new Date();
+
 var presupuesto = 0;
+var gastos = new Array();
+var idGasto = 0;
 
 function actualizarPresupuesto(nuevoPresupuesto) {
     if(nuevoPresupuesto >= 0 && typeof nuevoPresupuesto == 'number'){
@@ -14,17 +18,26 @@ function mostrarPresupuesto() {
     return `Tu presupuesto actual es de ${presupuesto} €`;
 }
 
-function CrearGasto(descripcion, valor) {
+function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
+    this.etiquetas = new Array();
     if(valor < 0 || typeof valor != 'number'){
         this.valor = 0;
     }
     else{
         this.valor = valor;
     }
-    this.descripcion = descripcion;
+    this.etiquetas = etiquetas;
+
+
     this.mostrarGasto = function() {
-        console.log(`Gasto correspondiente a ${descripcion} con valor ${valor} €`);
-        return`Gasto correspondiente a ${descripcion} con valor ${valor} €`;
+        let stringEtiquetas;
+        etiquetas.forEach(element => {
+            stringEtiquetas += `\n-${element}`
+        });
+        return`Gasto correspondiente a ${descripcion} con valor ${valor} €.
+                Fecha: FECHA_EN_FORMATO_LOCALIZADO
+                Etiquetas: ${stringEtiquetas}`
+                ;
     }
     this.actualizarDescripcion = function(nuevaDescripcion){
         this.descripcion = nuevaDescripcion;
@@ -34,12 +47,68 @@ function CrearGasto(descripcion, valor) {
             this.valor = nuevoValor;
         }
     }
+
+    
+    this.actualizarFecha = function(nuevaFecha){
+
+    }
+    this.anyadirEtiquetas = function(...nuevasEtiquetas){
+        nuevasEtiquetas.forEach(element =>{
+            if(!this.etiquetas.includes(element)){
+                this.etiquetas.push(element);
+            }
+        });
+    }
+    this.borrarEtiquetas = function(...borrarEtiquetas){
+        borrarEtiquetas.forEach(element => {
+            let index = etiquetas.indexOf(element);
+            if(index !== -1){
+                this.etiquetas.splice(index,1)
+            }
+        });
+    }
 }
+
+function listarGastos(){
+    return gastos;
+}
+
+function anyadirGasto(gasto){
+    gasto.id = idGasto;
+    idGasto++;
+    gastos.push(gasto)
+}
+
+function borrarGasto(gastoABorrar){
+    if(!isNaN(gastoABorrar)&&gastoABorrar>0){
+        for (let i = 0; i < gastos.length; i++) {
+            if (gastos[i].id == gastoABorrar) {
+                gastos.splice(i, 1);
+                break;
+            }
+        }
+    }
+}
+
+function calcularTotalGastos(){
+
+}
+
+function calcularBalance(){
+
+}
+
+
 // NO MODIFICAR A PARTIR DE AQUÍ: exportación de funciones y objetos creados para poder ejecutar los tests.
 // Las funciones y objetos deben tener los nombres que se indican en el enunciado
 // Si al obtener el código de una práctica se genera un conflicto, por favor incluye todo el código que aparece aquí debajo
 export   {
     mostrarPresupuesto,
     actualizarPresupuesto,
-    CrearGasto
+    CrearGasto,
+    listarGastos,
+    anyadirGasto,
+    borrarGasto,
+    calcularTotalGastos,
+    calcularBalance
 }
