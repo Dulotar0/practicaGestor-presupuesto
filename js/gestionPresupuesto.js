@@ -26,17 +26,18 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     else{
         this.valor = valor;
     }
-    this.etiquetas = etiquetas;
+    this.etiquetas = this.anyadirEtiquetas(...newEtiquetas)
+
+  date.
+// esta sale como dd/mm/yyyy o mm/dd/yyyy dependiendo de la zona, la que quiero. fecha = date.toLocaleDateString() 
 
 
-    this.mostrarGasto = function() {
-        let stringEtiquetas;
+    this.mostrarGastoCompleto = function() {
+        let stringEtiquetas ='';
         etiquetas.forEach(element => {
-            stringEtiquetas += `\n-${element}`
+            stringEtiquetas += `- ${element}\n`
         });
-        return`Gasto correspondiente a ${descripcion} con valor ${valor} €.
-                Fecha: FECHA_EN_FORMATO_LOCALIZADO
-                Etiquetas: ${stringEtiquetas}`
+        return`Gasto correspondiente a ${descripcion} con valor ${valor} €.\nFecha: ${fecha}\nEtiquetas:\n${stringEtiquetas}`
                 ;
     }
     this.actualizarDescripcion = function(nuevaDescripcion){
@@ -52,6 +53,7 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     this.actualizarFecha = function(nuevaFecha){
 
     }
+
     this.anyadirEtiquetas = function(...nuevasEtiquetas){
         nuevasEtiquetas.forEach(element =>{
             if(!this.etiquetas.includes(element)){
