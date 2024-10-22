@@ -76,6 +76,20 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
         });
     }
     this.anyadirEtiquetas(...etiquetas)
+
+
+    this.obtenerPeriodoAgrupacion = function(periodo){
+        let date = new Date(this.fecha)  
+        if(periodo === "dia"){
+            return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2,0)}-${(date.getDate()).toString().padStart(2,0)}`;
+        }
+        else if(periodo === "mes"){
+            return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2,0)}`;
+        }
+        else if(periodo === "anyo"){
+            return `${date.getFullYear()}`;
+        }
+    }
 }
 
 function listarGastos(){
@@ -111,6 +125,47 @@ function calcularBalance(){
     return presupuesto - calcularTotalGastos();
 }
 
+function filtrarGastos(filtro){
+    console.log(filtro)
+    let resultado = gastos.filter((gasto)=>{
+
+        console.log("filtro.valorMaximo:", filtro.valorMaximo,"tipo",typeof filtro.valorMaximo,"filtro.valorMinimo:", filtro.valorMinimo,"tipo",typeof filtro.valorMinimo,
+            `\n`, "gasto.valor:", gasto.valor,"tipo",typeof gasto.valor);
+
+        if(filtro.fechaDesde && Date.parse(filtro.fechaDesde) > gasto.fecha){
+            return false;
+        }
+        if (filtro.fechaHasta && new Date(filtro.fechaHasta) < new Date(gasto.fecha)) {
+            return false;
+        }
+        if(filtro.valorMinimo && filtro.valorMinimo > gasto.valor){
+            return false;
+        }
+        if(filtro.valorMaximo && filtro.valorMaximo < gasto.valor){
+            return false;
+        }
+        if(filtro.descripcionContiene && !gasto.descripcion.toString().toLower().includes(filtro.descripcionContiene,toString().toLower())){
+            return false;
+        }
+        if(filtro.etiquetasTiene && filtro.etiquetasTiene.length() > 0){
+            let gastoEtiquetas = gasto.etiquetas.map((etiqueta) => etiqueta.toLower())
+            let filtroEtiquetas = etiquetas.map((etiqueta) => etiqueta.toLower())
+            let filtradoEtiquetas = filtroEtiquetas.filter((etiqueta) => gastoEtiquetas.includes(etiqueta))
+            if(filtradoEtiquetas.length === 0){
+                return false;
+            }
+        }
+        return true;
+    })
+    console.log()
+    resultado.forEach(element => {
+        console.log((element.valor).toString());
+    });
+    return resultado;
+}
+function agruparGastos(periodo, etiquetas, fechaDesde, fechaHasta){
+    return 
+}
 
 // NO MODIFICAR A PARTIR DE AQUÍ: exportación de funciones y objetos creados para poder ejecutar los tests.
 // Las funciones y objetos deben tener los nombres que se indican en el enunciado
@@ -123,5 +178,7 @@ export   {
     anyadirGasto,
     borrarGasto,
     calcularTotalGastos,
-    calcularBalance
+    calcularBalance,
+    filtrarGastos,
+    agruparGastos
 }
