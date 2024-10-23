@@ -165,25 +165,27 @@ function filtrarGastos(filtro){
     return resultado;
 }
 function agruparGastos(periodo = 'mes', etiquetas, fechaDesde, fechaHasta){
+    
     console.log(periodo,'--',etiquetas,'--',fechaDesde,'--',fechaHasta)
     let gastosFiltrados = filtrarGastos({
         etiquetasTiene: etiquetas,
         fechaDesde: fechaDesde,
         fechaHasta:fechaHasta
     })
-    let result = gastosFiltrados.reduce((acumulador,gasto)=>{
-        
-        if(!acumulador[gasto.fecha]){
-            acumulador[gasto.fecha]=[]
-        }
-        
-        acumulador[gasto.fecha].push(gasto)
-        console.log(acumulador[gasto.fecha])
-        console.log(acumulador[gasto])
-        return acumulador
-    })
+    
 
-    return 
+    
+    let result = gastosFiltrados.reduce(function (acumulador, gasto) {
+        let fecha = gasto.obtenerPeriodoAgrupacion(periodo);
+
+        acumulador[new Date(gasto.fecha).getMonth()+1] = acumulador[new Date(gasto.fecha).getMonth()+1] || {contador: 0 , listado: []};
+        acumulador[new Date(gasto.fecha).getMonth()+1].contador++;
+        acumulador[new Date(gasto.fecha).getMonth()+1].listado.push(gasto);
+
+        return acumulador;
+    },{});
+    console.log(result)
+    return result
 }
 
 // NO MODIFICAR A PARTIR DE AQUÍ: exportación de funciones y objetos creados para poder ejecutar los tests.
