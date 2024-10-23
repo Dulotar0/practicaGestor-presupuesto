@@ -126,9 +126,7 @@ function calcularBalance(){
 }
 
 function filtrarGastos(filtro){
-    console.log(filtro)
     let resultado = gastos.filter((gasto)=>{
-        console.log(filtro)
 
         if(filtro.fechaDesde && Date.parse(filtro.fechaDesde) > gasto.fecha){
             return false;
@@ -143,32 +141,48 @@ function filtrarGastos(filtro){
             return false;
         }
         let descripcionEnMinusculas = gasto.descripcion.toLowerCase();
-
-       console.log(typeof filtro.descripcion)
         if(filtro.descripcionContiene && typeof filtro.descripcionContiene === 'string' ){
-            console.log('existo')
             if(!descripcionEnMinusculas.includes(filtro.descripcionContiene.toLowerCase())){
-                console.log('macaco')
                 return false;
             }
-        }
-        if(filtro.etiquetasTiene && filtro.etiquetasTiene.length() > 0){
-            let gastoEtiquetas = gasto.etiquetas.map((etiqueta) => etiqueta.toLower())
-            let filtroEtiquetas = etiquetas.map((etiqueta) => etiqueta.toLower())
-            let filtradoEtiquetas = filtroEtiquetas.filter((etiqueta) => gastoEtiquetas.includes(etiqueta))
-            if(filtradoEtiquetas.length === 0){
+        }     
+        
+        if(filtro.etiquetasTiene && filtro.etiquetasTiene.length > 0){
+            let count=0;
+            gasto.etiquetas.forEach(eticGasto => {
+                filtro.etiquetasTiene.forEach(eticFiltro => {
+                    if(eticGasto.toLowerCase() == eticFiltro.toLowerCase()){
+                        count++;
+                    }
+                });
+            });
+            if(count == 0){
                 return false;
             }
         }
         return true;
     })
-    console.log()
-    resultado.forEach(element => {
-        console.log((element.valor).toString(),'--',element.descripcion);
-    });
     return resultado;
 }
-function agruparGastos(periodo, etiquetas, fechaDesde, fechaHasta){
+function agruparGastos(periodo = 'mes', etiquetas, fechaDesde, fechaHasta){
+    console.log(periodo,'--',etiquetas,'--',fechaDesde,'--',fechaHasta)
+    let gastosFiltrados = filtrarGastos({
+        etiquetasTiene: etiquetas,
+        fechaDesde: fechaDesde,
+        fechaHasta:fechaHasta
+    })
+    let result = gastosFiltrados.reduce((acumulador,gasto)=>{
+        
+        if(!acumulador[gasto.fecha]){
+            acumulador[gasto.fecha]=[]
+        }
+        
+        acumulador[gasto.fecha].push(gasto)
+        console.log(acumulador[gasto.fecha])
+        console.log(acumulador[gasto])
+        return acumulador
+    })
+
     return 
 }
 
