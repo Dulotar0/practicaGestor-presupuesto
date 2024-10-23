@@ -128,9 +128,7 @@ function calcularBalance(){
 function filtrarGastos(filtro){
     console.log(filtro)
     let resultado = gastos.filter((gasto)=>{
-
-        console.log("filtro.valorMaximo:", filtro.valorMaximo,"tipo",typeof filtro.valorMaximo,"filtro.valorMinimo:", filtro.valorMinimo,"tipo",typeof filtro.valorMinimo,
-            `\n`, "gasto.valor:", gasto.valor,"tipo",typeof gasto.valor);
+        console.log(filtro)
 
         if(filtro.fechaDesde && Date.parse(filtro.fechaDesde) > gasto.fecha){
             return false;
@@ -144,8 +142,15 @@ function filtrarGastos(filtro){
         if(filtro.valorMaximo && filtro.valorMaximo < gasto.valor){
             return false;
         }
-        if(filtro.descripcionContiene && !gasto.descripcion.toString().toLower().includes(filtro.descripcionContiene,toString().toLower())){
-            return false;
+        let descripcionEnMinusculas = gasto.descripcion.toLowerCase();
+
+       console.log(typeof filtro.descripcion)
+        if(filtro.descripcionContiene && typeof filtro.descripcionContiene === 'string' ){
+            console.log('existo')
+            if(!descripcionEnMinusculas.includes(filtro.descripcionContiene.toLowerCase())){
+                console.log('macaco')
+                return false;
+            }
         }
         if(filtro.etiquetasTiene && filtro.etiquetasTiene.length() > 0){
             let gastoEtiquetas = gasto.etiquetas.map((etiqueta) => etiqueta.toLower())
@@ -159,7 +164,7 @@ function filtrarGastos(filtro){
     })
     console.log()
     resultado.forEach(element => {
-        console.log((element.valor).toString());
+        console.log((element.valor).toString(),'--',element.descripcion);
     });
     return resultado;
 }
