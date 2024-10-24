@@ -166,7 +166,6 @@ function filtrarGastos(filtro){
 }
 function agruparGastos(periodo = 'mes', etiquetas, fechaDesde, fechaHasta){
     
-    console.log(periodo,'--',etiquetas,'--',fechaDesde,'--',fechaHasta)
     let gastosFiltrados = filtrarGastos({
         etiquetasTiene: etiquetas,
         fechaDesde: fechaDesde,
@@ -178,14 +177,11 @@ function agruparGastos(periodo = 'mes', etiquetas, fechaDesde, fechaHasta){
     let result = gastosFiltrados.reduce(function (acumulador, gasto) {
         let fecha = gasto.obtenerPeriodoAgrupacion(periodo);
         
-        acumulador[fecha] = acumulador[fecha] || {contador: 0 , listado: [], total: 0};
-        acumulador[fecha].contador++;
-        acumulador[fecha].total = acumulador[fecha].total + gasto.valor;
-        acumulador[fecha].listado.push(gasto);
+        acumulador[fecha] = acumulador[fecha] || 0;
+        acumulador[fecha] = parseFloat(acumulador[fecha] + gasto.valor);
 
         return acumulador;
     },{});
-    console.log(result)
     return result
 }
 
