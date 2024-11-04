@@ -17,7 +17,6 @@ function mostrarPresupuesto() {
 }
 
 function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
-    this.etiquetas = [];
     this.descripcion = descripcion;
     if(valor < 0 || typeof valor != 'number'){
         this.valor = 0;
@@ -32,6 +31,15 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
     else{
         this.fecha = Date.parse(fecha);  
     }
+
+    if (etiquetas == null){
+        this.etiquetas = [];
+    }
+    else{
+        this.etiquetas = etiquetas;
+    }
+        
+
 
 
     this.actualizarFecha = function(nuevaFecha){
@@ -75,7 +83,6 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
             }
         });
     }
-    this.anyadirEtiquetas(...etiquetas)
 
 
     this.obtenerPeriodoAgrupacion = function(periodo){
