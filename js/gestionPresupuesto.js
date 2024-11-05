@@ -133,8 +133,8 @@ function calcularBalance(){
 }
 
 function filtrarGastos(filtro){
+    
     let resultado = gastos.filter((gasto)=>{
-
         if(filtro.fechaDesde && Date.parse(filtro.fechaDesde) > gasto.fecha){
             return false;
         }
