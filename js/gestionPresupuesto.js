@@ -39,9 +39,6 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
         this.etiquetas = etiquetas;
     }
         
-
-
-
     this.actualizarFecha = function(nuevaFecha){
         if(nuevaFecha != ''&& typeof nuevaFecha === 'string' && !isNaN(Date.parse(nuevaFecha))){
             this.fecha = Date.parse(nuevaFecha)
@@ -83,8 +80,6 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
             }
         });
     }
-
-
     this.obtenerPeriodoAgrupacion = function(periodo){
         let date = new Date(this.fecha)  
         if(periodo === "dia"){
@@ -98,17 +93,14 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
         }
     }
 }
-
 function listarGastos(){
     return gastos;
 }
-
 function anyadirGasto(gasto){
     gasto.id = idGasto;
     idGasto++;
     gastos.push(gasto)
 }
-
 function borrarGasto(gastoABorrar){
     if(!isNaN(gastoABorrar) && gastoABorrar >= 0){
         for (let i = 0; i < gastos.length; i++) {
@@ -119,7 +111,6 @@ function borrarGasto(gastoABorrar){
         }
     }
 }
-
 function calcularTotalGastos(){
     let sumaGastos = 0;
     gastos.forEach(element => {
@@ -127,11 +118,9 @@ function calcularTotalGastos(){
     });
     return sumaGastos;
 }
-
 function calcularBalance(){
     return presupuesto - calcularTotalGastos();
 }
-
 function filtrarGastos(filtro){
     
     let resultado = gastos.filter((gasto)=>{
@@ -179,8 +168,6 @@ function agruparGastos(periodo = 'mes', etiquetas, fechaDesde, fechaHasta){
         fechaHasta:fechaHasta
     })
     
-
-    console.log(periodo)
     let result = gastosFiltrados.reduce(function (acumulador, gasto) {
         let fecha = gasto.obtenerPeriodoAgrupacion(periodo);
         
