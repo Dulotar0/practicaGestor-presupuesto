@@ -111,8 +111,8 @@ export function mostrarGastosAgrupadosWeb(idElemento,agrup, periodo){
 
 function repintar(){
     mostrarDatoEnId("presupuesto", gesPres.mostrarPresupuesto());
-    mostrarDatoEnId("gastos-totales", gesPres.calcularTotalGastos());
-    mostrarDatoEnId("balance-total", gesPres.calcularBalance());
+    mostrarDatoEnId("gastos-totales", parseInt(gesPres.calcularTotalGastos()));
+    mostrarDatoEnId("balance-total", parseFloat(gesPres.calcularBalance()));
     document.getElementById("listado-gastos-completo").innerText = ""
     for (let gasto of gesPres.listarGastos()) {
         mostrarGastoWeb("listado-gastos-completo", gasto);
@@ -200,14 +200,16 @@ function nuevoGastoWebFormulario(){
         event.preventDefault();
     
         let descripcion = event.currentTarget.descripcion.value;
-        let valor = event.currentTarget.valor.value;
+        let valor = parseInt(event.currentTarget.valor.value);
+        console.log(valor)
         let fecha = event.currentTarget.fecha.value;
         let etiquetas = event.currentTarget.etiquetas.value.split(',');
     
         gesPres.anyadirGasto(new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas));
+
         repintar();
         let btnAnyadir=document.getElementById("anyadirgasto-formulario")
-        btnAnyadir.removeAttribute("disable")
+        btnAnyadir.removeAttribute("disabled")
         formulario.remove();
     }
     let btnCancelar=formulario.querySelector("button.cancelar")
@@ -225,7 +227,7 @@ function HandleCancelar(){
     this.handleEvent = function(evento){
         this.formABorrar.remove()
         console.log(this.button)
-        this.button.removeAttribute("disable","")
+        this.button.removeAttribute("disabled","")
     }
 }
 
@@ -238,7 +240,7 @@ function EditarHandleformulario(){
         editarGastoButton.setAttribute("disabled","")
 
         formulario.descripcion.value = this.gasto.descripcion
-        formulario.valor.value = this.gasto.valor
+        formulario.valor.value = parseInt(this.gasto.valor)
         let fechaForm = new Date(this.gasto.fecha)
         formulario.fecha.value = fechaForm.toISOString().substring(0,10)
         formulario.etiquetas.value = this.gasto.etiquetas
@@ -246,6 +248,7 @@ function EditarHandleformulario(){
         let editarEvent = new EditarHandleEvent()
         editarEvent.gasto = this.gasto;
         formulario.addEventListener('submit',editarEvent)
+
 
 
         let btnCancelar=formulario.querySelector("button.cancelar")
@@ -266,13 +269,13 @@ function EditarHandleformulario(){
             event.preventDefault()
 
             let descripcion = event.currentTarget.descripcion.value;
-            let valor = event.currentTarget.valor.value;
+            let valor = parseFloat(event.currentTarget.valor.value);
             let fecha = event.currentTarget.fecha.value;
             let etiquetas = event.currentTarget.etiquetas.value.split(',');
     
 
             this.gasto.actualizarDescripcion(descripcion);
-            this.gasto.actualizarValor(valor);
+            this.gasto.valor = valor;
             this.gasto.actualizarFecha(fecha);
             this.gasto.borrarEtiquetas(this.gasto.etiquetas)
             this.gasto.anyadirEtiquetas(etiquetas)

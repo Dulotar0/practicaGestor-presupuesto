@@ -19,8 +19,8 @@ gesPres.anyadirGasto(g1);
 g1 = new gesPres.CrearGasto("Seguro coche", 195.78, "2021-10-06", "transporte", "seguros");
 gesPres.anyadirGasto(g1);
 
-gesPresWeb.mostrarDatoEnId('gastos-totales',gesPres.calcularTotalGastos());
-gesPresWeb.mostrarDatoEnId('balance-total',gesPres.calcularBalance ());
+gesPresWeb.mostrarDatoEnId('gastos-totales',parseInt(gesPres.calcularTotalGastos()));
+gesPresWeb.mostrarDatoEnId('balance-total',parseInt(gesPres.calcularBalance ()));
 
 let listarGastos = gesPres.listarGastos()
 listarGastos.forEach((gasto) => {
