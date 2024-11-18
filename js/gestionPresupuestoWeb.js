@@ -145,7 +145,6 @@ function nuevoGastoWeb(){
     let etiquetasGasto = prompt("Escribe las etiquetas, formato: etiqueta1,etiqueta2,etiqueta3...")
     let todasEtiquetas = etiquetasGasto.split(',')
     
-    console.log(descripcionGasto, valorGasto, fechaGasto, todasEtiquetas)
 
     let nuevoGasto = new gesPres.CrearGasto(descripcionGasto, valorGasto, fechaGasto)
     nuevoGasto.anyadirEtiquetas(todasEtiquetas)
@@ -224,23 +223,25 @@ function nuevoGastoWebFormulario(){
 } 
 function HandleCancelar(){
     this.handleEvent = function(evento){
-        console.log(this.formABorrar)
         this.formABorrar.remove()
-        this.button.removeAttribute("disable")
+        console.log(this.button)
+        this.button.removeAttribute("disable","")
     }
 }
 
 function EditarHandleformulario(){
     this.handleEvent = function(event){
-        console.log(this.gasto)
         let plantillaFormulario = document.getElementById("formulario-template").content.cloneNode(true);
         let formulario = plantillaFormulario.querySelector("form");
+
+        let editarGastoButton = event.currentTarget;
+        editarGastoButton.setAttribute("disabled","")
 
         formulario.descripcion.value = this.gasto.descripcion
         formulario.valor.value = this.gasto.valor
         let fechaForm = new Date(this.gasto.fecha)
         formulario.fecha.value = fechaForm.toISOString().substring(0,10)
-   
+        formulario.etiquetas.value = this.gasto.etiquetas
 
         let editarEvent = new EditarHandleEvent()
         editarEvent.gasto = this.gasto;
@@ -248,13 +249,15 @@ function EditarHandleformulario(){
 
 
         let btnCancelar=formulario.querySelector("button.cancelar")
+console.log(btnCancelar)
 
-        let handleCancelar = new HandleCancelar;
+        let handleCancelar = new HandleCancelar();
         handleCancelar.formABorrar = formulario;
+        handleCancelar.button = editarGastoButton;
 
         btnCancelar.addEventListener("click",handleCancelar);
 
-        
+
         let div = document.querySelector(".gasto")
         div.appendChild(plantillaFormulario)
     }
@@ -262,7 +265,6 @@ function EditarHandleformulario(){
     function EditarHandleEvent(){
         this.handleEvent = function(event){
             event.preventDefault()
-            alert(this.gasto.valor)
 
             let descripcion = event.currentTarget.descripcion.value;
             let valor = event.currentTarget.valor.value;
