@@ -249,7 +249,6 @@ function EditarHandleformulario(){
 
 
         let btnCancelar=formulario.querySelector("button.cancelar")
-console.log(btnCancelar)
 
         let handleCancelar = new HandleCancelar();
         handleCancelar.formABorrar = formulario;
@@ -258,7 +257,7 @@ console.log(btnCancelar)
         btnCancelar.addEventListener("click",handleCancelar);
 
 
-        let div = document.querySelector(".gasto")
+        let div = event.currentTarget.parentElement
         div.appendChild(plantillaFormulario)
     }
 
