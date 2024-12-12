@@ -284,3 +284,55 @@ function EditarHandleformulario(){
         }
     }
 }
+let filtrado = document.getElementById("filtrar-gastos");
+let formularioFiltro = filtrado.querySelector("form");
+formularioFiltro.addEventListener('submit',filtrarGastosWeb)
+function filtrarGastosWeb(event){
+    event.preventDefault()
+    
+    let filtradoDescripcion = document.getElementById("formulario-filtrado-descripcion").value
+    let filtradoValorMinimo = document.getElementById("formulario-filtrado-valor-minimo").value
+    let filtradoValorMaximo = document.getElementById("formulario-filtrado-valor-maximo").value
+    let filtradoFechaInicial = document.getElementById("formulario-filtrado-fecha-desde").value
+    let filtradoFechaFinal = document.getElementById("formulario-filtrado-fecha-hasta").value
+    let filtradoEtiquetas = document.getElementById("formulario-filtrado-etiquetas-tiene").value
+
+
+    if(filtradoEtiquetas){
+        filtradoEtiquetas = gesPres.transformarListadoEtiquetas(filtradoEtiquetas);
+        
+    }
+    
+    let filtro = {}
+    if (typeof filtradoDescripcion !== "undefined" && filtradoDescripcion) {
+        filtro.descripcionContiene = filtradoDescripcion;
+    }
+    if (typeof filtradoValorMinimo !== "undefined" && filtradoValorMinimo) {
+        filtro.valorMinimo = filtradoValorMinimo;
+    }
+    if (typeof filtradoValorMaximo !== "undefined" && filtradoValorMaximo) {
+        filtro.valorMaximo = filtradoValorMaximo;
+    }
+    if (typeof filtradoFechaInicial !== "undefined" && filtradoFechaInicial) {
+        filtro.fechaDesde = filtradoFechaInicial;
+    }
+    if (typeof filtradoFechaFinal !== "undefined" && filtradoFechaFinal) {
+        filtro.fechaHasta = filtradoFechaFinal;
+    }
+    if (typeof filtradoEtiquetas !== "undefined" && filtradoEtiquetas) {
+        filtro.etiquetasTiene = filtradoEtiquetas;
+    }
+
+    console.log(filtro)
+
+    document.getElementById("listado-gastos-completo").innerText = ""
+    let gastosFiltrados = gesPres.filtrarGastos(filtro)
+    console.log(gastosFiltrados)
+    gastosFiltrados.forEach(element => {
+        mostrarGastoWeb("listado-gastos-completo",element)
+    });
+  
+    //filtrarGastos({etiquetasTiene: ["alimentacion", "gasolina"], fechaDesde: "2021-10-10"});
+    //filtrarGastos({etiquetasTiene: ["alimentacion", "gasolina"], fechaHasta: "2020-12-31", valorMaximo: 200});
+
+}

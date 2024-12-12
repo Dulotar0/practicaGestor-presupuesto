@@ -55,4 +55,3 @@ gesPresWeb.mostrarGastosAgrupadosWeb('agrupacion-mes',gastosAgrupados2,'mes')
 
 let gastosAgrupados3 = gesPres.agruparGastos('anyo')
 gesPresWeb.mostrarGastosAgrupadosWeb('agrupacion-anyo',gastosAgrupados3,'año')
-
