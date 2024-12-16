@@ -349,6 +349,8 @@ function cargarGastosWeb(){
         gesPres.cargarGastos(localStorage.GestorGastosDWEC)
         
     }
-    
+    else{
+        gesPres.cargarGastos([])
+    }
     repintar()
 }
