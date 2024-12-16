@@ -289,7 +289,7 @@ let formularioFiltro = filtrado.querySelector("form");
 formularioFiltro.addEventListener('submit',filtrarGastosWeb)
 function filtrarGastosWeb(event){
     event.preventDefault()
-    
+
     let filtradoDescripcion = document.getElementById("formulario-filtrado-descripcion").value
     let filtradoValorMinimo = document.getElementById("formulario-filtrado-valor-minimo").value
     let filtradoValorMaximo = document.getElementById("formulario-filtrado-valor-maximo").value
@@ -331,8 +331,24 @@ function filtrarGastosWeb(event){
     gastosFiltrados.forEach(element => {
         mostrarGastoWeb("listado-gastos-completo",element)
     });
-  
-    //filtrarGastos({etiquetasTiene: ["alimentacion", "gasolina"], fechaDesde: "2021-10-10"});
-    //filtrarGastos({etiquetasTiene: ["alimentacion", "gasolina"], fechaHasta: "2020-12-31", valorMaximo: 200});
+}
 
+
+let botonCargar = document.getElementById('cargar-gastos');
+botonCargar.addEventListener('click',cargarGastosWeb);
+let botonGuardar = document.getElementById('guardar-gastos');
+botonGuardar.addEventListener('click',guardarGastosWeb);
+function guardarGastosWeb(){
+    
+    localStorage.GestorGastosDWEC = JSON.stringify(gesPres.listarGastos())
+    console.log(localStorage.GestorGastosDWEC)
+}
+function cargarGastosWeb(){
+
+    if(localStorage.GestorGastosDWEC){
+        gesPres.cargarGastos(localStorage.GestorGastosDWEC)
+        
+    }
+    
+    repintar()
 }

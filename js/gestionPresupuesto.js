@@ -2,6 +2,7 @@ var presupuesto = 0;
 var gastos = new Array();
 var idGasto = 0;
 
+
 function actualizarPresupuesto(nuevoPresupuesto) {
     if(nuevoPresupuesto >= 0 && typeof nuevoPresupuesto == 'number'){
         presupuesto = nuevoPresupuesto;
@@ -92,6 +93,7 @@ function CrearGasto(descripcion, valor, fecha, ...etiquetas) {
             return `${date.getFullYear()}`;
         }
     }
+
 }
 function listarGastos(){
     return gastos;
@@ -124,6 +126,7 @@ function calcularBalance(){
 function filtrarGastos(filtro){
     
     let resultado = gastos.filter((gasto)=>{
+
         if(filtro.fechaDesde && Date.parse(filtro.fechaDesde) > gasto.fecha){
             return false;
         }
@@ -136,7 +139,7 @@ function filtrarGastos(filtro){
         if(filtro.valorMaximo && filtro.valorMaximo < gasto.valor){
             return false;
         }
-        let descripcionEnMinusculas = gasto.descripcion.toLowerCase();
+        let descripcionEnMinusculas = gasto.descripcion ? gasto.descripcion.toLowerCase() : '';
         if(filtro.descripcionContiene && typeof filtro.descripcionContiene === 'string' ){
             if(!descripcionEnMinusculas.includes(filtro.descripcionContiene.toLowerCase())){
                 return false;
@@ -189,6 +192,17 @@ function transformarListadoEtiquetas(etiquetas){
    
 }
 
+function cargarGastos(gastosAlmacenamiento){
+    gastos = [];
+    console.log(gastosAlmacenamiento)
+    for (let g of gastosAlmacenamiento) {
+        let gastoRehidratado = new CrearGasto();
+        console.log(gastoRehidratado)
+        Object.assign(gastoRehidratado, g);
+        gastos.push(gastoRehidratado)
+    }
+}
+
 // NO MODIFICAR A PARTIR DE AQUÍ: exportación de funciones y objetos creados para poder ejecutar los tests.
 // Las funciones y objetos deben tener los nombres que se indican en el enunciado
 // Si al obtener el código de una práctica se genera un conflicto, por favor incluye todo el código que aparece aquí debajo
@@ -203,5 +217,6 @@ export   {
     calcularBalance,
     filtrarGastos,
     agruparGastos,
-    transformarListadoEtiquetas
+    transformarListadoEtiquetas,
+    cargarGastos
 }
