@@ -344,10 +344,9 @@ function guardarGastosWeb(){
     console.log(localStorage.GestorGastosDWEC)
 }
 function cargarGastosWeb(){
-
-    if(localStorage.GestorGastosDWEC){
-        gesPres.cargarGastos(localStorage.GestorGastosDWEC)
-        
+    let gastosAReidratar = localStorage.GestorGastosDWEC
+    if(gastosAReidratar && gastosAReidratar !== 'undefined' && gastosAReidratar !== 'null'){
+        gesPres.cargarGastos(JSON.parse(gastosAReidratar))
     }
     else{
         gesPres.cargarGastos([])
