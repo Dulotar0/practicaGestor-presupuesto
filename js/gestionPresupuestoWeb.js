@@ -67,6 +67,15 @@ export function mostrarGastoWeb(idElemento,gasto){
     botonBorrar.addEventListener('click',borrado)
     divGasto.append(botonBorrar)
     
+    //BOTON BORRAR GASTOS API
+    let botonBorrarGastosApi = document.createElement('button');
+    botonBorrarGastosApi.className = 'borrar-gasto-api';
+    botonBorrarGastosApi.textContent = 'Borrar (API)';
+    let borrarApi = new BorrarApiHandle()
+    borrarApi.gasto = gasto
+    botonBorrarGastosApi.addEventListener('click',borrarApi)
+    divGasto.append(botonBorrarGastosApi);
+
     //BOTON EDITAR GASTO FORM
     let botonEditarForm = document.createElement("button")
     botonEditarForm.className = "gasto-editar-formulario"
@@ -77,6 +86,8 @@ export function mostrarGastoWeb(idElemento,gasto){
     botonEditarForm.addEventListener('click',editarForm)
     divGasto.appendChild(botonEditarForm);
 
+
+    
 }
 export function mostrarGastosAgrupadosWeb(idElemento,agrup, periodo){
     let divAgrupacion = document.createElement('div');
@@ -212,17 +223,24 @@ function nuevoGastoWebFormulario(){
         btnAnyadir.removeAttribute("disabled")
         formulario.remove();
     }
-    let btnCancelar=formulario.querySelector("button.cancelar")
 
+    let btnCancelar=formulario.querySelector("button.cancelar")
     let handleCancelar = new HandleCancelar;
     handleCancelar.formABorrar = formulario;
     handleCancelar.button = btnAnyadir;
-
     btnCancelar.addEventListener("click",handleCancelar);
+
+    let bottonEnviarApi = formulario.querySelector('button.gasto-enviar-api');
+    let handleEnviarApi = new HandleEnviarApi;
+    bottonEnviarApi.addEventListener('click',handleEnviarApi)
 
     let div = document.getElementById('controlesprincipales')
     div.append(plantillaFormulario)
 } 
+
+
+
+
 function HandleCancelar(){
     this.handleEvent = function(evento){
         this.formABorrar.remove()
@@ -353,3 +371,46 @@ function cargarGastosWeb(){
     }
     repintar()
 }
+
+let url = 'https://suhhtqjccd.execute-api.eu-west-1.amazonaws.com/latest';
+    
+let buttonCargarGastosApi = document.getElementById("cargar-gastos-api");
+buttonCargarGastosApi.addEventListener('click',cargarGastosApi);
+
+async function cargarGastosApi(){
+    let user = document.getElementById('nombre_usuario').value;
+    user = user.toLocaleLowerCase().replace(' ','')
+    let nuevaUrl = url+'/'+user
+    let promise = await fetch(nuevaUrl)
+
+
+    if(promise.ok){
+        let json = await promise.json();
+        gesPres.cargarGastos(json);
+    }
+    else{
+        alert("Error-HTTP: " + promise.status);
+    }
+    repintar()
+}
+
+function BorrarApiHandle(){
+    this.handleEvent = async function(event){
+        let user = document.getElementById('nombre_usuario').value;
+        user = user.toLocaleLowerCase().replace(' ','')
+        let nuevaUrl = url+'/'+user
+
+        let promise = await fetch(nuevaUrl,{
+            method: 'DELETE',
+            body: JSON.stringify()
+        })
+    }
+}
+
+function HandleEnviarApi(){
+    this.handleEvent = function(event){
+        console.log('asd')
+    }
+}
+
+

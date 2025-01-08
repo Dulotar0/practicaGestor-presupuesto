@@ -21,13 +21,22 @@
         <button type="button" id="anyadirgasto-formulario">
           Añadir gasto (formulario)
         </button>
-      </div>
 
-      <div>
-        <button id="guardar-gastos">Guardar gastos</button>
-        <button id="cargar-gastos">Cargar gastos</buton>
-      </div>
-      
+        <br>
+        <br>
+        <button id="cargar-gastos-api">
+          Cargar gastos (API)
+        </button>
+        <input type="text" id="nombre_usuario">
+    </div>
+    
+    <br>
+
+    <div>
+      <button id="guardar-gastos">Guardar gastos</button>
+      <button id="cargar-gastos">Cargar gastos</buton>
+    </div>
+
     <div id="aplicacion">
         
       
@@ -126,7 +135,8 @@
               <input type="text" name="etiquetas" id="etiquetas">
           </div>
           <button type="submit">Enviar</button>
-          <button class="cancelar" type="button">Cancelar</button>
+          <button type="button" class="gasto-enviar-api">Enviar (API)</button>
+          <button type="button" class="cancelar">Cancelar</button>
       </form>
     </template>
   </body>
