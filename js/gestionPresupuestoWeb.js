@@ -214,11 +214,13 @@ function nuevoGastoWebFormulario(){
         let valor = parseInt(event.currentTarget.valor.value);
         console.log(valor)
         let fecha = event.currentTarget.fecha.value;
-        let etiquetas = event.currentTarget.etiquetas.value.split(',');
-    
-        gesPres.anyadirGasto(new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas));
+        let etiquetas = event.currentTarget.etiquetas.value.split(','); 
+
+        let nuevoGasto = new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas)
+        gesPres.anyadirGasto(nuevoGasto)
 
         repintar();
+
         let btnAnyadir=document.getElementById("anyadirgasto-formulario")
         btnAnyadir.removeAttribute("disabled")
         formulario.remove();
@@ -232,6 +234,7 @@ function nuevoGastoWebFormulario(){
 
     let bottonEnviarApi = formulario.querySelector('button.gasto-enviar-api');
     let handleEnviarApi = new HandleEnviarApi;
+    
     bottonEnviarApi.addEventListener('click',handleEnviarApi)
 
     let div = document.getElementById('controlesprincipales')
@@ -381,35 +384,80 @@ async function cargarGastosApi(){
     let user = document.getElementById('nombre_usuario').value;
     user = user.toLocaleLowerCase().replace(' ','')
     let nuevaUrl = url+'/'+user
+console.log(nuevaUrl)
     let promise = await fetch(nuevaUrl)
-
-
     if(promise.ok){
         let json = await promise.json();
         gesPres.cargarGastos(json);
     }
     else{
-        alert("Error-HTTP: " + promise.status);
+        console.log("Error: " + promise.status);
     }
     repintar()
 }
 
 function BorrarApiHandle(){
     this.handleEvent = async function(event){
+        try{
+            let user = document.getElementById('nombre_usuario').value;
+            user = user.toLocaleLowerCase().replace(' ','')
+            let nuevaUrl = url+'/'+user
+    
+            let promise = await fetch(nuevaUrl)
+            if(promise.ok){
+
+                let json = await promise.json();
+                let existeGasto = json.find(obj=>obj.gastoId === this.gasto.gastoId);
+
+                if(existeGasto){
+                    nuevaUrl = nuevaUrl + '/resource/' + 1
+                    console.log(nuevaUrl)
+                    /*let borrar = await fetch(nuevaUrl,{
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    })
+                    if(borrar.ok){
+                        console.log('borrado')
+                    }
+                    else{
+                        console.log("Error: " + promise.status);
+                    }  */                   
+                }
+            }
+            else{
+                console.log("Error: " + promise.status);
+            }
+        } catch(error){
+            console.log(error);
+        }  
+    }
+} //sale error porque estoy intentando borrar algo que no esta en la api
+
+function HandleEnviarApi(){
+    this.handleEvent = async function(event){
         let user = document.getElementById('nombre_usuario').value;
         user = user.toLocaleLowerCase().replace(' ','')
         let nuevaUrl = url+'/'+user
+        
+        let descripcion = document.getElementById('descripcion').value;
+        let valor = parseInt(document.getElementById('valor').value);
+        let fecha = document.getElementById('fecha').value;;
+        let etiquetas = document.getElementById('etiquetas').value.split(','); 
 
-        let promise = await fetch(nuevaUrl,{
-            method: 'DELETE',
-            body: JSON.stringify()
+        let nuevoGasto = new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas)
+        console.log(nuevoGasto)
+
+        await fetch(nuevaUrl,{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(nuevoGasto)
+        }).catch((error)=>{
+            alert("Error: " + error);
         })
-    }
-}
-
-function HandleEnviarApi(){
-    this.handleEvent = function(event){
-        console.log('asd')
     }
 }
 
