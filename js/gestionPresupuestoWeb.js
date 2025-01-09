@@ -270,6 +270,10 @@ function EditarHandleformulario(){
         editarEvent.gasto = this.gasto;
         formulario.addEventListener('submit',editarEvent)
 
+        let btnEditarApi = formulario.querySelector('button.gasto-enviar-api')
+        let handleEnviarApi = new HandleEnviarFormApi()
+        handleEnviarApi.gasto = this.gasto
+        btnEditarApi.addEventListener('click',handleEnviarApi)
 
 
         let btnCancelar=formulario.querySelector("button.cancelar")
@@ -280,6 +284,7 @@ function EditarHandleformulario(){
 
         btnCancelar.addEventListener("click",handleCancelar);
 
+        
 
         let div = event.currentTarget.parentElement
         div.appendChild(plantillaFormulario)
@@ -384,7 +389,6 @@ async function cargarGastosApi(){
     let user = document.getElementById('nombre_usuario').value;
     user = user.toLocaleLowerCase().replace(' ','')
     let nuevaUrl = url+'/'+user
-console.log(nuevaUrl)
     let promise = await fetch(nuevaUrl)
     if(promise.ok){
         let json = await promise.json();
@@ -398,56 +402,44 @@ console.log(nuevaUrl)
 
 function BorrarApiHandle(){
     this.handleEvent = async function(event){
-        try{
-            let user = document.getElementById('nombre_usuario').value;
-            user = user.toLocaleLowerCase().replace(' ','')
-            let nuevaUrl = url+'/'+user
-    
-            let promise = await fetch(nuevaUrl)
-            if(promise.ok){
+        event.preventDefault()
 
-                let json = await promise.json();
-                let existeGasto = json.find(obj=>obj.gastoId === this.gasto.gastoId);
+        let user = document.getElementById('nombre_usuario').value;
+        user = user.toLocaleLowerCase().replace(' ','')
+        let nuevaUrl = url+'/'+user +'/'+ this.gasto.gastoId
 
-                if(existeGasto){
-                    nuevaUrl = nuevaUrl + '/resource/' + 1
-                    console.log(nuevaUrl)
-                    /*let borrar = await fetch(nuevaUrl,{
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    })
-                    if(borrar.ok){
-                        console.log('borrado')
-                    }
-                    else{
-                        console.log("Error: " + promise.status);
-                    }  */                   
-                }
+        console.log(nuevaUrl)
+        let borrar = await fetch(nuevaUrl,{
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
             }
-            else{
-                console.log("Error: " + promise.status);
-            }
-        } catch(error){
-            console.log(error);
-        }  
+        })
+        if(borrar.ok){
+            console.log('borrado')
+        }
+        else{
+            console.log("Error: " + promise.status);
+        }    
+        
+        cargarGastosApi()
     }
-} //sale error porque estoy intentando borrar algo que no esta en la api
+}
 
 function HandleEnviarApi(){
     this.handleEvent = async function(event){
+        event.preventDefault()
         let user = document.getElementById('nombre_usuario').value;
         user = user.toLocaleLowerCase().replace(' ','')
         let nuevaUrl = url+'/'+user
         
-        let descripcion = document.getElementById('descripcion').value;
-        let valor = parseInt(document.getElementById('valor').value);
-        let fecha = document.getElementById('fecha').value;;
-        let etiquetas = document.getElementById('etiquetas').value.split(','); 
+        let form = event.currentTarget.parentNode
+        let descripcion = form.descripcion.value;
+        let valor = parseFloat(form.valor.value);
+        let fecha = form.fecha.value;
+        let etiquetas = form.etiquetas.value.split(',');
 
         let nuevoGasto = new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas)
-        console.log(nuevoGasto)
 
         await fetch(nuevaUrl,{
             method: 'POST',
@@ -458,7 +450,35 @@ function HandleEnviarApi(){
         }).catch((error)=>{
             alert("Error: " + error);
         })
+        cargarGastosApi()
     }
 }
 
+function HandleEnviarFormApi(){
+    this.handleEvent = async function(event){
+        event.preventDefault()
 
+        let form = event.currentTarget.parentNode
+        let descripcion = form.descripcion.value;
+        let valor = parseFloat(form.valor.value);
+        let fecha = form.fecha.value;
+        let etiquetas = form.etiquetas.value.split(',');
+
+        let nuevoGasto = new gesPres.CrearGasto(descripcion,valor,fecha,...etiquetas)
+        console.log(nuevoGasto)
+
+        let user = document.getElementById('nombre_usuario').value;
+        user = user.toLocaleLowerCase().replace(' ','')
+        let nuevaUrl = url+'/'+user+'/'+this.gasto.gastoId
+        await fetch(nuevaUrl,{
+            method: 'PUT',
+            headers:{
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(nuevoGasto)
+        }).catch((error)=>{
+            alert("Error: " + error);
+        })
+        cargarGastosApi()
+    }
+}
